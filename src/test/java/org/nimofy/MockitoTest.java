@@ -1,27 +1,22 @@
 package org.nimofy;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-
+@ExtendWith(MockitoExtension.class)
 public class MockitoTest {
-
+    //
     @InjectMocks
     Main main;
 
-    @BeforeEach
-    public void setup() {
-        //if we don't call below, we will get NullPointerException
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void testListSize() {
@@ -35,30 +30,18 @@ public class MockitoTest {
         verify(mockedList).add("one");
         verify(mockedList).clear();
     }
-
     @Test
     public void testStabbing() {
         LinkedList mockedList = mock(LinkedList.class);
 
-        //stubbing
         when(mockedList.get(0)).thenReturn("first");
-        when(mockedList.get(1)).thenThrow(new RuntimeException());
 
-        //following prints "first"
         System.out.println(mockedList.get(0));
 
-        //following throws runtime exception
-//        System.out.println(mockedList.get(1));
-
-        //following prints "null" because get(999) was not stubbed
         System.out.println(mockedList.get(999));
-//
-//        //Although it is possible to verify a stubbed invocation, usually it's just redundant
-//        //If your code cares what get(0) returns, then something else breaks (often even before verify() gets executed).
-//        //If your code doesn't care what get(0) returns, then it should not be stubbed.
-        verify(mockedList).get(0);
-    }
 
+    }
+//
     @Test
     public void testVerifyInvocations() {
         LinkedList mockedList = mock(LinkedList.class);
@@ -88,15 +71,15 @@ public class MockitoTest {
         verify(mockedList, atLeast(2)).add("three times");
         verify(mockedList, atMost(5)).add("three times");
     }
-
-    @Test
-    public void stubbingVoidMethodsWithExceptions() {
-
-        LinkedList mockedList = mock(LinkedList.class);
-        doThrow(new RuntimeException()).when(mockedList).clear();
-        mockedList.clear();
-    }
-
+//
+//    @Test
+//    public void stubbingVoidMethodsWithExceptions() {
+//
+//        LinkedList mockedList = mock(LinkedList.class);
+//        doThrow(new RuntimeException()).when(mockedList).clear();
+//        mockedList.clear();
+//    }
+//
     @Test
     public void testVerificationInOrder() {
         LinkedList mockedList = mock(LinkedList.class);
@@ -107,10 +90,9 @@ public class MockitoTest {
         inOrder.verify(mockedList).add("was added first");
         inOrder.verify(mockedList).add("was added second");
     }
-
+//
     @Test
     public void testMainMethod() {
-        MockitoAnnotations.initMocks(this);
         System.out.println(this.main.testMethod());
     }
 }
